@@ -13,7 +13,8 @@
     "@google/generative-ai": "^0.24.1",
     "next": "16.4.0",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "react-markdown": "^10.1.0"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
