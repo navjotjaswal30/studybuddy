@@ -226,11 +226,15 @@ export default function Home() {
     return `${year}-${month}-${day}`;
   }
 
-  const todayString = getTorontoDate();
+  const [todayString, setTodayString] = useState("");
 
-  const torontoToday = new Date(
-    `${todayString}T00:00:00`
-  );
+useEffect(() => {
+  setTodayString(getTorontoDate());
+}, []);
+
+const torontoToday = todayString
+  ? new Date(`${todayString}T00:00:00`)
+  : null;
 
   function formatDate(date: string | null) {
     if (!date) return "";
@@ -261,19 +265,19 @@ export default function Home() {
     ).getDate();
   }
 
-  function daysUntil(date: string | null) {
-    if (!date) return 999;
+function daysUntil(date: string | null) {
+  if (!date) return 999;
 
-    const targetDate = new Date(
-      `${date}T00:00:00`
-    );
+  const targetDate = new Date(
+    `${date}T00:00:00`
+  );
 
-    return Math.ceil(
-      (targetDate.getTime() -
-        torontoToday.getTime()) /
-        (1000 * 60 * 60 * 24)
-    );
-  }
+  return Math.ceil(
+    (targetDate.getTime() -
+      torontoToday.getTime()) /
+      (1000 * 60 * 60 * 24)
+  );
+}
 
   function formatTime(time: string) {
     if (!time) return "";
@@ -390,28 +394,19 @@ export default function Home() {
         })
     );
 
-  const futureItems =
-    deduplicatedItems
-      .filter((item) => {
-        if (!item.date) return false;
+const futureItems =
+  deduplicatedItems
+    .filter((item) => {
+      if (!item.date || !torontoToday) {
+        return false;
+      }
 
-        const itemDate = new Date(
-          `${item.date}T00:00:00`
-        );
+      const itemDate = new Date(
+        `${item.date}T00:00:00`
+      );
 
-        return itemDate >= torontoToday;
-      })
-      .sort((a, b) => {
-        const dateA = new Date(
-          `${a.date}T00:00:00`
-        ).getTime();
-
-        const dateB = new Date(
-          `${b.date}T00:00:00`
-        ).getTime();
-
-        return dateA - dateB;
-      });
+      return itemDate >= torontoToday;
+    })
 
   const deadlineTypes = [
     "assignment",
@@ -443,9 +438,11 @@ export default function Home() {
   const nextExam =
     upcomingExams[0];
 
-  const endOfWeek =
-    new Date(torontoToday);
+  const endOfWeek = torontoToday
+  ? new Date(torontoToday)
+  : null;
 
+if (endOfWeek) {
   const currentDay =
     endOfWeek.getDay();
 
@@ -458,26 +455,27 @@ export default function Home() {
     endOfWeek.getDate() +
       daysUntilSunday
   );
+}
 
-  const dueThisWeek =
-    upcomingDeadlines.filter(
-      (item) => {
-        if (!item.date)
-          return false;
+const dueThisWeek =
+  upcomingDeadlines.filter((item) => {
+    if (
+      !item.date ||
+      !torontoToday ||
+      !endOfWeek
+    ) {
+      return false;
+    }
 
-        const itemDate =
-          new Date(
-            `${item.date}T00:00:00`
-          );
-
-        return (
-          itemDate >=
-            torontoToday &&
-          itemDate <=
-            endOfWeek
-        );
-      }
+    const itemDate = new Date(
+      `${item.date}T00:00:00`
     );
+
+    return (
+      itemDate >= torontoToday &&
+      itemDate <= endOfWeek
+    );
+  });
 
   const upcomingItems =
     futureItems.slice(0, 5);
