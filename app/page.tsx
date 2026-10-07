@@ -234,7 +234,7 @@ useEffect(() => {
 
 const torontoToday = todayString
   ? new Date(`${todayString}T00:00:00`)
-  : null;
+  : new Date("1970-01-01T00:00:00");
 
   function formatDate(date: string | null) {
     if (!date) return "";
@@ -397,7 +397,7 @@ function daysUntil(date: string | null) {
 const futureItems =
   deduplicatedItems
     .filter((item) => {
-      if (!item.date || !torontoToday) {
+      if (!item.date) {
         return false;
       }
 
@@ -461,7 +461,6 @@ const dueThisWeek =
   upcomingDeadlines.filter((item) => {
     if (
       !item.date ||
-      !torontoToday ||
       !endOfWeek
     ) {
       return false;
