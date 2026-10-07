@@ -11,10 +11,13 @@
   "dependencies": {
     "@cedrugs/pdf-parse": "^1.0.0",
     "@google/generative-ai": "^0.24.1",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.2",
     "next": "16.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "react-markdown": "^10.1.0"
+    "react-markdown": "^10.1.0",
+    "twilio": "^6.1.2"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
